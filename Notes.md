@@ -17,3 +17,5 @@ Si dovrà testare il tool con un database di programmi vulnerabili con format st
 
 Eventualmente migliorare il programma aggiungendo una funzionalità che segue i puntatori [ ]
 
+Stai leggendo la documentazione di angr. Sei arrivato qui: https://docs.angr.io/en/latest/analyses/cfg.html
+
