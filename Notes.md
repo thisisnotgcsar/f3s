@@ -19,3 +19,16 @@ Eventualmente migliorare il programma aggiungendo una funzionalità che segue i 
 
 Stai leggendo la documentazione di angr. Sei arrivato qui: https://docs.angr.io/en/latest/analyses/cfg.html
 
+The program might good to be:
+ - [Common Weakness Enumeration (CWE)-compatible](http://cwe.mitre.org/)
+ - [CII Best Practices "passing" badge](https://www.bestpractices.dev/en)
+
+[This is nice tool you can take inspiration from](https://dwheeler.com/flawfinder/)
+
+## Things to do
+ - Create a test program, with different types of format string vulnerabilities and analyze what is found and what is not
+ - Creare un codice semplice che abbia una format string vulnerability, studiare l'assembly e cercare di aprirlo con angr.
+
+## Format String Vulnerable Functions
+[f]printf(), [v]snprintf(), and syslog()
+
