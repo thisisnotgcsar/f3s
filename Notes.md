@@ -28,6 +28,13 @@ The program might good to be:
 ## Things to do
  - Create a test program, with different types of format string vulnerabilities and analyze what is found and what is not
  - Creare un codice semplice che abbia una format string vulnerability, studiare l'assembly e cercare di aprirlo con angr.
+  
+## Possibile algoritmo
+ - Costruisco il CFG dell'eseguibile
+ - controllo i simboli dell'eseguibile e cerco se c'è un simbolo con un nome che mi interessa (funzioni vulnerabili)
+ - Vado in tutti i punti dell'eseguibile in cui c'è una call ai miei simboli
+ - Costruisco il basic block a quegli indirizzi e controllo il valore dei registri andando indietro
+ - 
 
 ## Format String Vulnerable Functions
 [f]printf(), [v]snprintf(), and syslog()
