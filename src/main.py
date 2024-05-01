@@ -1,6 +1,6 @@
 import angr
 
-EXECUTABLE_PATH = "../TESTS/straight/straight.exe"
+EXECUTABLE_PATH = "../TESTS/simple/simple.exe"
 
 # Creating angr project
 proj = angr.Project(EXECUTABLE_PATH, load_options={'auto_load_libs': False})

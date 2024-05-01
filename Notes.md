@@ -39,3 +39,21 @@ The program might good to be:
 ## Format String Vulnerable Functions
 [f]printf(), [v]snprintf(), and syslog()
 
+## Angr graph dependencies
+ - VSA_DDG: VFG. It is a DDG based on VSA states (no symbolic values)
+ - CDG: CFG.
+ - VFG: CFG. It is a CFG with static analysis on top of it
+ - CFB: A Control-Flow Blanket is a representation for storing all instructions, data entries, and bytes of a full program.
+ - CFGFast: Create CFG. If you give startAddress it will be better. A custom analysis, called GirlScout, is specifically made to recover the base address of a binary blob. After the base address is determined, you may want to reload the binary with the new base address by creating a new Project object, and then re-recover the CFG.
+ - DDG: CFGFor a better data dependence graph, please consider performing a better static analysis first (like Value-set Analysis), and then construct a dependence graph on top of the analysis result (for example, the VFG in angr).
+The DDG is based on a CFG, which should ideally be a CFGEmulated generated with the following options:
+keep_state=True to keep all input states
+state_add_options=angr.options.refs to store memory, register, and temporary value accesses
+You may want to consider a high value for context_sensitivity_level as well when generating the CFG.
+Also note that since we are using states from CFG, any improvement in analysis performed on CFG (like a points-to analysis) will directly benefit the DDG.
+ - BackwardSlice: CFG
+ - BoyScout: Try to determine the architecture and endieness of a binary blob
+ - CompleteCallingConvention: Implements full-binary calling convention analysis. During the initial analysis of a binary, you may set recover_variables to True so that it will perform variable recovery on each function before performing calling convention analysis.
+ - 
+
+
