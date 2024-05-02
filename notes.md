@@ -54,6 +54,9 @@ Also note that since we are using states from CFG, any improvement in analysis p
  - BackwardSlice: CFG
  - BoyScout: Try to determine the architecture and endieness of a binary blob
  - CompleteCallingConvention: Implements full-binary calling convention analysis. During the initial analysis of a binary, you may set recover_variables to True so that it will perform variable recovery on each function before performing calling convention analysis.
- - 
+
+## knowledge from the runs
+ - even if the binary is stripped seems like he can still find function main
+ - Analysis modifies main project object adding more informations
 
 
