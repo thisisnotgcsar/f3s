@@ -17,9 +17,6 @@ main_function = project.kb.functions.function(name="main")
 print(main_function)
 
 # get the first block of the main function
-main_block_0_1 = list(main_function.blocks)[0]
-print(main_block_0_1)
+print(list(main_function.blocks))
 
-# still getting the main first block but via another path
-main_block_0_2 = cfg.model.get_any_node(main_function.addr)
-print(main_block_0_2)
+print(cfg.model.get_any_node(main_function.addr).successors)

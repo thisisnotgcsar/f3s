@@ -59,4 +59,6 @@ Also note that since we are using states from CFG, any improvement in analysis p
  - even if the binary is stripped seems like he can still find function main
  - Analysis modifies main project object adding more informations
 
-
+## useful code
+gcc -o a.exe -O0 -ggdb {.c file}
+[a for a in iter(project.kb.functions.items())]	# print all the functions in a binary
