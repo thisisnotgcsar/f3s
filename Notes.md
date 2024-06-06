@@ -1,3 +1,7 @@
+WORKPLACE SLACK: necst.slack.com
+account: mail polimi
+
+
 # Progetto ODC
  - Fino all’ultimo appello di settembre
  - rimaniamo in contatto su slack
