@@ -62,3 +62,20 @@ Also note that since we are using states from CFG, any improvement in analysis p
 ## useful code
 gcc -o a.exe -O0 -ggdb {.c file}
 [a for a in iter(project.kb.functions.items())]	# print all the functions in a binary
+
+
+# devi creare l' handler per l' interprocedural analysis
+
+prendere l' istruzione di interesse, sappiamo che registro usa di interesse vai sopra di qualche istruzione fino a che non ne trovi una che definisce quel registro e
+ripercorri backward il ddg
+
+mettere tutto questo dentro a una funzione e questo ti diventerà il programma
+fare un file di test che compila i sorgenti in diverse architetture e chiama la funzione e vede se torna true per tutti
+vedere se va intra-procedural
+creare un file con tutte le sink e il parametro di interesse
+mettere argparser e fare colori
+fare readme
+aggiungere le altre funzioni di sink
+provare a vedere con un database di cve come si comporta
+mettere commenti
+vedere file mango.py
