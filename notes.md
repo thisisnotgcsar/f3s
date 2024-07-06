@@ -64,12 +64,11 @@ Also note that since we are using states from CFG, any improvement in analysis p
  - Analysis modifies main project object adding more informations
 
 ## useful code
-gcc -o a.exe -O0 -ggdb {.c file}
+gcc -O0 -fno-builtin {.c file}
 [a for a in iter(project.kb.functions.items())]	# print all the functions in a binary
 
 
-# devi creare l' handler per l' interprocedural analysis
-
+# Cose da fare
 prendere l' istruzione di interesse, sappiamo che registro usa di interesse vai sopra di qualche istruzione fino a che non ne trovi una che definisce quel registro e
 ripercorri backward il ddg
 
@@ -82,4 +81,21 @@ fare readme
 aggiungere le altre funzioni di sink
 provare a vedere con un database di cve come si comporta
 mettere commenti
-vedere file mango.py
+
+controllare se funziona anche con altre funzioni tipo printf
+
+implementare logging
+
+redefine the list of sinks made by you the onw fo arg resolver sucks
+
+f3s: Format String Static Scanner
+
+provare a vedere con la lista delle vulnerabilità quanti ne trovi
+
+fare requirements
+
+check waht SimCC.ARG_REGS contains if binary is 32 bit
+
+modified RDA is taint + recursive
+
+parametrizzare la depth della traces to sink per ricostruire calltrace e metterlo come parametro del binary
