@@ -54,7 +54,6 @@ def _flat_calltrace(project: Project, calltrace: CallTrace) -> list[tuple[str, i
 	addr_name_addr: Callable[[int], tuple[str, int]] = lambda addr: (project.kb.functions[addr].name, addr)
 	callsites: list[CallSite] = list(reversed(calltrace.callsites))			# reverse order from root of CFG to sink
 	result = list(map(lambda callsite: addr_name_addr(callsite.caller_func_addr), callsites))	# process the callers
-	result.append(addr_name_addr(callsites[-1].callee_func_addr))								# lastly, add the sink
 	return result
 
 def f3s(binary_path: str, depth: int, verbose: bool = False) -> list[tuple[str, int, list[tuple[str, int]]]]:
