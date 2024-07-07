@@ -12,6 +12,10 @@ import argparse
 #
 # Front-end of f3s. Interacts with the main module and display the results.
 
+if __name__ != "__main__":
+	sys.stderr.write("This is a script, it should be run not imported.")
+	exit(-1)
+
 def depth_handler(v: int):
 	v = int(v)
 	if v <= 0:
@@ -26,7 +30,7 @@ def present_results(results: list[tuple[str, int, list[tuple[str, int]]]]) -> No
 			sys.stdout.write(hex(result[1]) + "\t")		# print sink address
 			for f in result[2]:							# print calltrace
 				sys.stdout.write(f[0]+"@"+hex(f[1])+" ")
-		print()
+			print()
 	else:
 		print("No vulnerable sinks found.")
 
@@ -36,13 +40,12 @@ parser = argparse.ArgumentParser(	description='f3s: Format String Static Scanner
 									usage="f3s [-h, --help] [-v, --verbose] BINARY_FILE")
 parser.add_argument('BINARY_FILE', type=argparse.FileType('rb'), help="Path of the binary file to analyze.")
 parser.add_argument('-v', '--verbose', action='store_true', help='Output verbose informations while analyzing.')
-parser.add_argument('-d', '--depth', type=depth_handler, default=10, help='depth to reconstruct the calltrace from the backward slice of the sink. Higher value equals higher time of computation. Defaults to 10.')
+parser.add_argument('-d', '--depth', type=depth_handler, default=2, help='depth to reconstruct the calltrace from the backward slice of the sink. Higher value equals higher time of computation. Defaults to 10.')
 args = parser.parse_args()
 
-# print_banner()
 results: list[tuple[str, int, list[tuple[str, int]]]] = f3s(str(os.path.abspath(args.BINARY_FILE.name)), args.depth, args.verbose)
 present_results(results)
 
-if __name__ != "__main__":
-	sys.stderr.write("This is a script, it should be run not imported.")
-	exit(0)
+if results:
+	exit(0)		# if vulnerable sinks found
+exit(1)			# otherwise exit code is 1

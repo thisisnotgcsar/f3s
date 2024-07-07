@@ -25,11 +25,11 @@ __all__ = ['f3s']
 # Given a function in input (usually a sink) explores all calltraces that bring to the sink
 # And the creates a subject for the RDA with the trace and the given sink
 # depth is the how much deep to traverse backward the CFG to get to know the complete calltrace
+# TODO there is a bug here with depth > 2 and sinks that are directly in main
+# check gen_traces_to_sink maybe for the bug. Anyway i think the bug is in the trace parameter of CallTraceSubject
+# Possibel solution se la traccia è uguale a 3 e la prima funzione è _start, cut it
 def _subjects_from_function(project: Project, function: Function, depth: int) -> list[CallTraceSubject]:
 	traces = list(traces_to_sink(function, project.kb.functions.callgraph, depth, []))	# Backward Slices to the sink
-	# return list(map(lambda trace: CallTraceSubject(
-	# 	trace, 
-	# 	project.kb.functions[trace.current_function_address()]), traces))
 	return list(map(lambda trace: CallTraceSubject(
 					trace, 
 					project.kb.functions[trace.callsites[0].caller_func_addr]),	# taking the address of the caller function
@@ -81,6 +81,7 @@ def f3s(binary_path: str, depth: int, verbose: bool = False) -> list[tuple[str, 
 	# Doing standard angr analyses on the provided binary
 	project = Project(binary_path, auto_load_libs=False)
 	cfg = project.analyses.CFGFast(normalize=True, data_references=True)
+
 	# 	- atoms not alive after the call of the function AND
 	# 	- atoms not defined at the begging of the function after call
 	project.analyses.CompleteCallingConventions(recover_variables=True, cfg=cfg)

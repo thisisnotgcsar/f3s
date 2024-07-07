@@ -69,9 +69,7 @@ gcc -O0 -fno-builtin {.c file}
 
 
 # Cose da fare
-
 fare un file di test che compila i sorgenti in diverse architetture e chiama la funzione e vede se torna true per tutti
-vedere se va intra-procedural
 fare readme
 provare a vedere con un database di cve come si comporta
 
@@ -80,3 +78,7 @@ fare requirements
 check waht SimCC.ARG_REGS contains if binary is 32 bit
 
 modified RDA is taint + recursive
+
+solve bug
+
+to run test pytest ./tests/run_tests.py
