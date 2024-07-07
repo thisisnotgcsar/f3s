@@ -3,12 +3,14 @@ from angr.knowledge_plugins.functions.function import Function
 from angr.analyses.analysis import AnalysisFactory
 from angr.analyses.reaching_definitions.dep_graph import DepGraph
 from angr.calling_conventions import SimFunctionArgument
+from angr.analyses.reaching_definitions.call_trace import CallTrace, CallSite
 from argument_resolver.utils.rda import CustomRDA
 from argument_resolver.handlers import handler_factory, StdioHandlers
 from argument_resolver.utils.utils import Utils
 from argument_resolver.utils.call_trace import traces_to_sink
 from argument_resolver.utils.call_trace_visitor import CallTraceSubject
 from sinks.fs_sinks import FORMAT_STRING_SINKS
+from typing import Callable
 import sys
 import utils
 
@@ -20,13 +22,21 @@ import utils
 
 __all__ = ['f3s']
 
-# Given a function in input (usually a sink) outputs a list of calltraces
-# that arrive to the function calling the sink
-def _subjects_from_function(project: Project, function: Function) -> list[CallTraceSubject]:
-	traces = list(traces_to_sink(function, project.kb.functions.callgraph, 1, []))
+# Given a function in input (usually a sink) explores all calltraces that bring to the sink
+# And the creates a subject for the RDA with the trace and the given sink
+# depth is the how much deep to traverse backward the CFG to get to know the complete calltrace
+def _subjects_from_function(project: Project, function: Function, depth: int) -> list[CallTraceSubject]:
+	traces = list(traces_to_sink(function, project.kb.functions.callgraph, depth, []))	# Backward Slices to the sink
+	# return list(map(lambda trace: CallTraceSubject(
+	# 	trace, 
+	# 	project.kb.functions[trace.current_function_address()]), traces))
 	return list(map(lambda trace: CallTraceSubject(
-		trace, 
-		project.kb.functions[trace.current_function_address()]), traces))
+					trace, 
+					project.kb.functions[trace.callsites[0].caller_func_addr]),	# taking the address of the caller function
+																				# that calls the sink
+																				# its in last (first) callsite
+																				# and that will be the subject for RDA												
+				traces))
 
 # link the vulnerable argument positions from the FORMAT_STRING_SINKS of the function
 # to the symbolic atoms taken from the calling convention
@@ -37,7 +47,17 @@ def _get_sim_atoms_from_sink(f: Function) -> list[SimFunctionArgument]:
 	vuln_sym_atoms: list[SimFunctionArgument] = [x for x in sym_atoms if x.reg_name in vuln_reg_names]
 	return vuln_sym_atoms
 
-def f3s(binary_path: str, verbose: bool = False) -> set[tuple[str, int]]:
+# returns a list representing the calltrace with
+# all its callsites in the format {function name} (str) {address} (int) -> next
+def _flat_calltrace(project: Project, calltrace: CallTrace) -> list[tuple[str, int]]:
+	# given a function address returns a tuple containing function name, function address
+	addr_name_addr: Callable[[int], tuple[str, int]] = lambda addr: (project.kb.functions[addr].name, addr)
+	callsites: list[CallSite] = list(reversed(calltrace.callsites))			# reverse order from root of CFG to sink
+	result = list(map(lambda callsite: addr_name_addr(callsite.caller_func_addr), callsites))	# process the callers
+	result.append(addr_name_addr(callsites[-1].callee_func_addr))								# lastly, add the sink
+	return result
+
+def f3s(binary_path: str, depth: int, verbose: bool = False) -> list[tuple[str, int, list[tuple[str, int]]]]:
 	"""
 	Main function to be called for format string vulnerability discovery.
 
@@ -46,16 +66,18 @@ def f3s(binary_path: str, verbose: bool = False) -> set[tuple[str, int]]:
 		- verbose (bool): if should output verbose information
 
 	## Return
-		A set of tuples for each vulnerable function found, containg:
+		A list of tuples for each vulnerable function found, containg:
+		
 		- name (str)
 		- address (int)
+		- calltrace (list[tuple[str, int]]): found trace bringing to sink in format [name] (address) -> next for each function
 	"""
-	
+
 	# enables log of verbose messages
 	utils.log_enable = verbose
 
 	# initialize return list
-	results: set[tuple[str, int]] = set([])
+	results: list[tuple[str, int, list[tuple[str, int]]]] = []
 
 	# Doing standard angr analyses on the provided binary
 	project = Project(binary_path, auto_load_libs=False)
@@ -84,9 +106,9 @@ def f3s(binary_path: str, verbose: bool = False) -> set[tuple[str, int]]:
 	for f in f_sinks_found:		# For every possible format string sink found
 		vuln_sym_atoms = _get_sim_atoms_from_sink(f)	# get the vulnerable atoms of function parameters
 		utils.log(f"Now analyzing {utils.green(f.name)} ({hex(f.addr)})")
-		subjects = _subjects_from_function(project, f)			# Every calltrace that brings to the sink
+		subjects = _subjects_from_function(project, f, depth)			# Every calltrace that brings to the sink
 		utils.log(f"found {len(subjects)} calltraces to sink")
-		
+
 		for i, s in enumerate(subjects):		# will be a subject of the analysis
 			utils.log(f"starting RDA for sink {utils.green(f.name)} and calltrace {i}")
 
@@ -96,7 +118,7 @@ def f3s(binary_path: str, verbose: bool = False) -> set[tuple[str, int]]:
 				subject=s,
 				observation_points=observation_points,
 				function_handler=handler,
-				dep_graph=DepGraph(),
+				dep_graph=DepGraph()
 			)
 
 			# take the resulting state of the RDA for the sink function
@@ -119,11 +141,11 @@ def f3s(binary_path: str, verbose: bool = False) -> set[tuple[str, int]]:
 				# it does this by checking if the value was tainted
 				if rda_results.is_top(value.one_value()) == True:
 					utils.log(utils.yellow(f"ATOM {a} of {f.name} @ {hex(f.addr)} FOUND VULNERABLE!"))
-					results.add((f.name, hex(f.addr)))
+					results.append((f.name, f.addr, _flat_calltrace(project, s.content)))
 
 	return results
 
 
 if __name__ == "__main__":
-	sys.stderr.write("This is an error message.\n")
+	sys.stderr.write("This is a module should not be run.\n")
 	exit(0)
