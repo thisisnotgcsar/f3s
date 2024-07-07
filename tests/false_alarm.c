@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main(int argc, char **argv) {
-	char greeting[0x40];
-	sprintf(greeting, "Greeting: %s", "ciao");
+	printf("%s", "ciao");
+	return 0;
 }

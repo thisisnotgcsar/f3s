@@ -2,17 +2,15 @@
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
-	char greeting[0x40];
-	
 	switch(atoi(argv[1])){
 		case 0:
 			puts("Nope");
 			break;
 		case 1:
-			sprintf(greeting, "Greeting: %s", argv[1]);
-			puts(greeting);
+			printf("%s\n", argv[1]);
 			break;
 		default:
 			break;
 	}
+	return 0;
 }

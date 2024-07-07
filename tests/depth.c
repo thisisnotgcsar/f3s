@@ -1,8 +1,7 @@
 #include <stdio.h>
 
 void check3(char* arg) {
-	char greeting[0x40];
-	sprintf(greeting, "Greeting: %s", arg);
+	printf("%s\n", arg);
 }
 
 void check2(char* arg) {
