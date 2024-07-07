@@ -20,12 +20,15 @@ def depth_handler(v: int):
 
 # just pretty prints the results in a easily parsable format
 def present_results(results: list[tuple[str, int, list[tuple[str, int]]]]) -> None:
-	for result in results:
-		sys.stdout.write(result[0] + "\t")			# print sink name
-		sys.stdout.write(hex(result[1]) + "\t")		# print sink address
-		for f in result[2]:							# print calltrace
-			sys.stdout.write(f[0]+"@"+hex(f[1])+" ")
-	print()
+	if results:
+		for result in results:
+			sys.stdout.write(result[0] + "\t")			# print sink name
+			sys.stdout.write(hex(result[1]) + "\t")		# print sink address
+			for f in result[2]:							# print calltrace
+				sys.stdout.write(f[0]+"@"+hex(f[1])+" ")
+		print()
+	else:
+		print("No vulnerable sinks found.")
 
 # Initializing argument parser
 parser = argparse.ArgumentParser(	description='f3s: Format String Static Scanner\n\nTakes in input a binary file from any architecture and applies static taint analysis to find format string vulnerabilities. Vulnerabilities are then printed in the easily parsable format: [sink_name] [sink_address] [call trace].\n\nGIULIO GOLINELLI - golinelli.giulio13@gmail.com - https://github.com/thisisnotgcsar',
