@@ -69,33 +69,14 @@ gcc -O0 -fno-builtin {.c file}
 
 
 # Cose da fare
-prendere l' istruzione di interesse, sappiamo che registro usa di interesse vai sopra di qualche istruzione fino a che non ne trovi una che definisce quel registro e
-ripercorri backward il ddg
 
-mettere tutto questo dentro a una funzione e questo ti diventerà il programma
 fare un file di test che compila i sorgenti in diverse architetture e chiama la funzione e vede se torna true per tutti
 vedere se va intra-procedural
-creare un file con tutte le sink e il parametro di interesse
-mettere argparser e fare colori
 fare readme
-aggiungere le altre funzioni di sink
 provare a vedere con un database di cve come si comporta
-mettere commenti
-
-controllare se funziona anche con altre funzioni tipo printf
-
-implementare logging
-
-redefine the list of sinks made by you the onw fo arg resolver sucks
-
-f3s: Format String Static Scanner
-
-provare a vedere con la lista delle vulnerabilità quanti ne trovi
 
 fare requirements
 
 check waht SimCC.ARG_REGS contains if binary is 32 bit
 
 modified RDA is taint + recursive
-
-parametrizzare la depth della traces to sink per ricostruire calltrace e metterlo come parametro del binary
