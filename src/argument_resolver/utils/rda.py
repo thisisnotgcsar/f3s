@@ -68,11 +68,11 @@ class CustomRDA(ReachingDefinitionsAnalysis):
 
             if node.addr in self.project.kb.functions and not self.is_reanalysis:
                 if self._function_handler.current_parent is None:
-                    if (
-                        "main" in self.project.kb.functions
-                        and node.addr == self.project.kb.functions["main"].addr
-                    ):
-                        state = self.taint_main_args(state)
+                    # if (
+                    #     "main" in self.project.kb.functions
+                    #     and node.addr == self.project.kb.functions["main"].addr
+                    # ):
+                    #     state = self.taint_main_args(state) <-- literally this function's broken and useless.
                     state.codeloc = CodeLocation(block_addr=node.addr, stmt_idx=None)
                     self._engine_vex.state = state
                     self._engine_vex._handle_function(
@@ -88,7 +88,10 @@ class CustomRDA(ReachingDefinitionsAnalysis):
         res = super()._run_on_node(node, state)
         return res
 
+    # This function doesn't get executed if the subject is not main
     def taint_main_args(self, state):
+        print("ciao")
+        exit(0)
         argc = claripy.BVS("ARGC", state.arch.bits, explicit_name=True)
         argv = claripy.BVS("ARGV", state.arch.bits, explicit_name=True)
         envp = claripy.BVS("ENVP", state.arch.bits, explicit_name=True)
