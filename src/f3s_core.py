@@ -30,6 +30,10 @@ __all__ = ['f3s']
 # Possibel solution se la traccia è uguale a 3 e la prima funzione è _start, cut it
 def _subjects_from_function(project: Project, function: Function, depth: int) -> list[CallTraceSubject]:
 	traces = list(traces_to_sink(function, project.kb.functions.callgraph, depth, []))	# Backward Slices to the sink
+	# for callsite in traces[0].callsites:
+	# 	print(project.kb.functions[callsite.callee_func_addr].name)
+	# 	print(project.kb.functions[callsite.caller_func_addr].name)
+	# exit(0)
 	return list(map(lambda trace: CallTraceSubject(
 					trace, 
 					project.kb.functions[trace.callsites[0].caller_func_addr]),	# taking the address of the caller function

@@ -1,8 +1,8 @@
 import os
 import sys
+
 # adding the src directory to the system path for searching modules inside it
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
-
 from src.f3s_core import f3s
 from src.utils import print_banner
 import argparse
@@ -10,7 +10,7 @@ import argparse
 # GIULIO GOLINELLI
 # golinelli.giulio13@gmail.com - https://github.com/thisisnotgcsar
 #
-# Front-end of f3s. Interacts with the main module and display the results.
+# Front-end of f3s. Interacts with the main module and displays the results.
 
 if __name__ != "__main__":
 	sys.stderr.write("This is a script, it should be run not imported.")
@@ -40,7 +40,7 @@ parser = argparse.ArgumentParser(	description='f3s: Format String Static Scanner
 									usage="f3s [-h, --help] [-v, --verbose] BINARY_FILE")
 parser.add_argument('BINARY_FILE', type=argparse.FileType('rb'), help="Path of the binary file to analyze.")
 parser.add_argument('-v', '--verbose', action='store_true', help='Output verbose informations while analyzing.')
-parser.add_argument('-d', '--depth', type=depth_handler, default=2, help='depth to reconstruct the calltrace from the backward slice of the sink. Higher value equals higher time of computation. Defaults to 10.')
+parser.add_argument('-d', '--depth', type=depth_handler, default=10, help='depth to reconstruct the calltrace from the backward slice of the sink. Higher value equals higher time of computation. Defaults to 10.')
 args = parser.parse_args()
 
 results: list[tuple[str, int, list[tuple[str, int]]]] = f3s(str(os.path.abspath(args.BINARY_FILE.name)), args.depth, args.verbose)
