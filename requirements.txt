@@ -1,0 +1,9 @@
+angr==9.2.108
+archinfo==9.2.108
+claripy==9.2.108
+cle==9.2.108
+ipdb==0.13.13
+networkx==3.3
+psutil==5.9.8
+pyvex==9.2.108
+rich==13.7.1
