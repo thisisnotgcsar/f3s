@@ -43,6 +43,7 @@ parser.add_argument('-v', '--verbose', action='store_true', help='Output verbose
 parser.add_argument('-d', '--depth', type=depth_handler, default=10, help='depth to reconstruct the calltrace from the backward slice of the sink. Higher value equals higher time of computation. Defaults to 10.')
 args = parser.parse_args()
 
+print_banner()
 results: list[tuple[str, int, list[tuple[str, int]]]] = f3s(str(os.path.abspath(args.BINARY_FILE.name)), args.depth, args.verbose)
 present_results(results)
 
