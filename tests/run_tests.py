@@ -1,11 +1,17 @@
 import subprocess
 import os
+from enum import Enum
+
+class Compiler(Enum):
+	GCC = "gcc"
+	ARM64 = "aarch64-linux-gnu-gcc"
+	ARM32 = "arm-linux-gnueabihf-gcc"
 
 # setup function run by all the tests to compile the c source
 # for analyzing the respective binary of the current test
-def _compile(source_file: str) -> None:
+def _compile(source_file: str, compiler: Compiler = Compiler.GCC) -> None:
 	os.chdir(os.path.dirname(__file__))				# change working directory to tests directory
-	compile_command = ["gcc", "-O0", "-fno-builtin", source_file]
+	compile_command = [compiler.value, "-O0", "-fno-builtin", source_file]
 	subprocess.run(compile_command, check=True)
 	os.chdir(os.path.join(os.path.dirname(__file__), '..'))		# going back to root
 
@@ -44,3 +50,11 @@ def test_depth() -> None:
 	_compile("./depth.c")
 	# call trace is separated with spaces
 	assert launch_f3s(f3s_command + ["-d", "99"]).stdout.decode("utf-8").count(' ') == 6
+
+def test_simple_printf_ARM64() -> None:
+	_compile("./simple_printf.c", Compiler.ARM64)
+	launch_f3s()
+
+def test_simple_printf_ARM32() -> None:
+	_compile("./simple_printf.c", Compiler.ARM32)
+	launch_f3s()
