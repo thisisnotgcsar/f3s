@@ -18,7 +18,8 @@ def _compile(source_file: str, compiler: Compiler = Compiler.GCC) -> None:
 f3s_command = ["python3", "f3s.py", "./tests/a.out"]
 
 def launch_f3s(command: list[str] = f3s_command) -> subprocess.CompletedProcess:
-	return subprocess.run(command, capture_output=True, check=True)
+	return subprocess.run(command, capture_output=True, check=True) # check ensures subprocess returned 0
+																	# in this case meaning it found vulnerabilities
 
 def test_simple_printf() -> None:
 	_compile("./simple_printf.c")
@@ -35,7 +36,10 @@ def test_check() -> None:
 def test_multiple_traces() -> None:
 	_compile("./multiple_traces.c")
 	# there are 2 different traces leading to sink
-	assert launch_f3s().stdout.decode("utf-8").count('\n') == 2
+	output: str = launch_f3s().stdout.decode("utf-8")
+	output: list[str] = output.splitlines()
+	# checking last 2 lines (dodge banner logo)
+	assert output[-1].startswith('printf') and output[-2].startswith('printf')	# 2 reports
 
 def test_hided() -> None:
 	_compile("./hided.c")
@@ -48,8 +52,11 @@ def test_false_alarm() -> None:
 
 def test_depth() -> None:
 	_compile("./depth.c")
+	# in this case e want to test for a deep call trace
 	# call trace is separated with spaces
-	assert launch_f3s(f3s_command + ["-d", "99"]).stdout.decode("utf-8").count(' ') == 6
+	output: str = launch_f3s(f3s_command + ["-d", "99"]).stdout.decode("utf-8")
+	lastline = output.splitlines()[-1]
+	assert lastline.count(' ') == 6		# checking for a deep calltrace
 
 def test_simple_printf_ARM64() -> None:
 	_compile("./simple_printf.c", Compiler.ARM64)

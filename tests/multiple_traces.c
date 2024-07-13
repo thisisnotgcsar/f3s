@@ -1,11 +1,11 @@
 #include <stdio.h>
 
 void check1(char* arg) {
-	printf("%s\n", arg);
+	printf(arg);
 }
 
 void check2(char* arg) {
-	printf("%s\n", arg);
+	printf(arg);
 }
 
 int main(int argc, char *argv[]) {

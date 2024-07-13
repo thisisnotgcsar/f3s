@@ -5,17 +5,17 @@ from sinks.sink import Sink
 #
 # File containing different sinks typical for format string vulnerabilities
 
-printf = Sink("printf", [1])
-fprintf = Sink("fprintf", [2])
-sprintf = Sink("sprintf", [2])
-dprintf = Sink("dprintf", [2])
-snprintf = Sink("snprintf", [3])
-vprintf = Sink("vprintf", [1])
-vfprintf = Sink("vfprintf", [2])
-vdprintf = Sink("vdprintf", [2])
-vsprintf = Sink("vsprintf", [2])
-vsnprintf = Sink("vsnprintf", [3])
-syslog = Sink("syslog", [2])
+printf = Sink("printf", [0])
+fprintf = Sink("fprintf", [1])
+sprintf = Sink("sprintf", [1])
+dprintf = Sink("dprintf", [1])
+snprintf = Sink("snprintf", [2])
+vprintf = Sink("vprintf", [0])
+vfprintf = Sink("vfprintf", [1])
+vdprintf = Sink("vdprintf", [1])
+vsprintf = Sink("vsprintf", [1])
+vsnprintf = Sink("vsnprintf", [2])
+syslog = Sink("syslog", [1])
 
 FORMAT_STRING_SINKS: dict[str, Sink] = {
 	"printf": printf,

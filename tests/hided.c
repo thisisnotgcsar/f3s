@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
 			puts("Nope");
 			break;
 		case 1:
-			printf("%s\n", argv[1]);
+			printf(argv[1]);
 			break;
 		default:
 			break;
