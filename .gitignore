@@ -5,3 +5,6 @@
 __pycache__/
 .pytest_cache/
 notes.md
+*.spec
+build/
+dist/
