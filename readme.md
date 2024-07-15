@@ -11,8 +11,9 @@
 
 - [1. About](#1-about)
   - [1.1. What does f3s do?](#11-what-does-f3s-do)
+  - [Example usage](#example-usage)
   - [2.1. What binary architectures are supported?](#21-what-binary-architectures-are-supported)
-  - [2.2. What functions f3s looks for?](#22-what-functions-f3s-looks-for)
+  - [2.2. What function sinks f3s looks for?](#22-what-function-sinks-f3s-looks-for)
   - [2.3. What is a static taint analysis and how does it work?](#23-what-is-a-static-taint-analysis-and-how-does-it-work)
   - [2.4. What static analyses and static binary techniques f3s makes use of?](#24-what-static-analyses-and-static-binary-techniques-f3s-makes-use-of)
   - [2.5. What is a format string vulnerability?](#25-what-is-a-format-string-vulnerability)
@@ -26,11 +27,26 @@
 
 # 1. About
 ## 1.1. What does f3s do?
-f3s makes use of a combination of static analyses directly on raw binaries to spot format string vulnerabilities. A function is flagged if the corresponding format parameter is found to be coming from user input. For every flag it does also display a callstack trace of the path that brought from the starting top function to the vulnerability found. f3s works on different types of architectures and stripped binaries.
+f3s makes use of a combination of static analyses directly on raw binaries to spot format string vulnerabilities. 
+
+A function (called sink) is flagged if the corresponding format parameter is found to be coming from user input. 
+
+For every flag it does also display a callstack trace of the path that brought from the starting top function to the vulnerability found. 
+
+f3s works on different types of architectures and stripped binaries.
 
 <p align="center">
   <img src="https://i.ibb.co/5TRZCS5/meme.png" alt="Your Image Alt Text" width=500>
 </p>
+
+## Example usage
+<p align="center">
+  <img src="https://i.ibb.co/ZzvvBsD/PHOTO-2024-07-11-20-17-42.jpg" alt="Your Image Alt Text" width=500>
+</p>
+<p align="center">
+  <i>Use `-h` option to discover all other arguments.</i>
+</p>
+
 
 ## 2.1. What binary architectures are supported?
 Currently f3s has been tested and works over these architectures:
@@ -38,7 +54,7 @@ Currently f3s has been tested and works over these architectures:
  - ARM32
  - ARM64
 
-## 2.2. What functions f3s looks for?
+## 2.2. What function sinks f3s looks for?
 You can find and extend the checked functions with their respective parameters at `./src/sinks/fs_sinks.py`. 
 Here is the list of the currently ones present in the file
  - printf
@@ -57,8 +73,8 @@ Here is the list of the currently ones present in the file
 *Static* means it does not make use of running the binary to build knowledge out of it but rather just look at the machine code. There are few important concepts you should know about taint analysis:
  - Taint: a taint is a flag that is logically associated with a particular datum. Tainted sources are usually user input arguments to a binary.
  - Elaboration of tainted data: everything that touches taint gets tainted. So every output of every function that takes in tainted data will be tainted. This is tipically for keeping track of where the user input has flowed.
- - sink: a sink is a parameter of a possible vulnerable function. Usually function+parameter matches are pre-known and checked during the analysis
- - sink + taint: when we find a sink that takes in a tainted value we know that our possible malicious data reached a possible vulnerable function and we trigger a report.
+ - Sink: a sink is a parameter of a possible vulnerable function. Usually function+parameter matches are pre-known and checked during the analysis
+ - Sink + Taint: when we find a sink that takes in a tainted value we know that our possible malicious data reached a possible vulnerable function and we trigger a report.
 
 ## 2.4. What static analyses and static binary techniques f3s makes use of?
  - VEX intermediate representation included in angr to lift-up the binaries and operate with architecture agnostic code.
